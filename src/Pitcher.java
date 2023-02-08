@@ -25,11 +25,12 @@ public class Pitcher {
 	public void pourToX(Pitcher X) {
 		if(X.size < contents) {
 			X.contents = X.size;
+			contents -= X.size;
 		}
 		else {
 			X.contents = contents;
+			contents = 0;
 		}
-		contents = 0;
 	}
 	
 	
