@@ -1,4 +1,3 @@
-
 import heapdict
 import math
 
@@ -25,54 +24,6 @@ to target quantity
 Return -1 if impossible
 '''
 
-'''
-def waterPitcher(target, cap):
-    # make the first node's value
-    # this value has root[0] as the amount in the infinite jug
-    root = tuple([0] * len(cap))
-
-    # initialize open and closed list
-    openList = [(root, 0, heu(0, root, target))]
-
-    closeList = {}
-
-    loopCounter = -1
-
-    while(openList):
-        loopCounter += 1
-        # pop the node with the smallest a star values
-        # The values in the heapDict are A-star values
-        currentState, height, astar = openList.pop()
-
-        print(currentState, height, astar)
-
-        closeList[currentState] = astar
-        #closeList.append((currentState, astar))
-        currentState = list(currentState)
-        print("Close list size:", len(closeList),
-              "current state", currentState)
-
-        if(currentState[0] == target):
-            return q[1]  # return height
-
-        successors = makeSuccessors(currentState, cap)
-        height += 1
-
-        for state in successors:
-            astar = height + heu(height, state, target)
-
-            if not inCloseList(state, astar, closeList) and not inOpenList(
-                    state, astar, openList) and state[0] <= target:
-                openList.append(tuple([height, state, height +
-                                      heu(height, state, target)]))
-
-    return -1
-
-
-def sortFn(elem):
-    return elem[2]
-'''
-
 
 def waterPitcher(target, cap):
     # make the first node's value
@@ -95,7 +46,7 @@ def waterPitcher(target, cap):
         #closeList.append((currentState, astar))
 
         if(currentState[0] == target):
-            print("Shortest path:", q[1])
+            #print("Shortest path:", q[1])
             return q[1]  # return height
 
         successors = makeSuccessors(currentState, cap)
@@ -174,18 +125,6 @@ def makeSuccessors(state, cap):
 '''
 A-star function calculates the A-star score f
 '''
-'''
-
-def heu(cost, currentState, target):
-    temp = []
-    total = target - currentState[0]
-    jugs = currentState[1:]
-    for state in jugs:
-        temp.append(abs(state - total) + cost)
-    return (min(temp)) / target
-
-
-'''
 
 
 def heu(cost, state, target):
@@ -200,45 +139,6 @@ def heu(cost, state, target):
 
 
 '''
-def waterPitcher(target, cap):
-    # make the first node's value
-    # this value has root[0] as the amount in the infinite jug
-    root = tuple([0] * len(cap))
-
-    # initialize open and closed list
-    openList = heapdict.heapdict()
-    openList[(root, 0)] = heu(0, root, target)
-
-    closeList = {}
-
-    while(openList):
-        # pop the node with the smallest a star values
-        # The values in the heapDict are A-star values
-        q, astar = openList.popitem()
-        currentState, height = q
-        print(currentState, height, astar)
-        closeList[currentState] = astar
-        #closeList.append((currentState, astar))
-
-        print("Close list size:", len(closeList))
-        if(currentState[0] == target):
-            return q[1]  # return height
-
-        successors = makeSuccessors(currentState, cap)
-        height += 1
-
-        for state in successors:
-            astar = height + heu(height, state, target)
-
-            if not inCloseList(state, astar, closeList) and not inOpenList(
-                    state, astar, openList) and state[0] <= target:
-                openList[(state, height)] = height +\
-                    heu(height, state, target)
-
-    return -1
-'''
-
-'''
 input: 1,4,10,15,22 = 181 (19)
 input1: 2,5,6,73 = 143 (7)
 input2: 3,6 = 2 (impossible)
@@ -248,7 +148,7 @@ input4: 2,3,5,19,121,852 = 11443 (36)
 
 
 def main():
-    target, cap = readFromFile("input5.txt")
+    target, cap = readFromFile("input\input5.txt")
     #prompt = [1, [1, 3]]
     print("Shortest path is:", waterPitcher(target, cap))
     # test()
