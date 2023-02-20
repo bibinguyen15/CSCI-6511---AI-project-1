@@ -32,58 +32,35 @@ def waterPitcher(target, cap):
 
     # initialize open and closed list
     openList = heapdict.heapdict()
-    openList[(root, 0)] = heu(0, root, target)
+    openList[(root, 0, ())] = heu(root, target)
 
     closeList = {}
 
-    while(openList):
+    while openList:
         # pop the node with the smallest a star values
         # The values in the heapDict are A-star values
-        q, astar = openList.popitem()
-        currentState, height = q
+        key, astar = openList.popitem()
+
+        # keys in the heapDict contains 3 values: state, height, and path
+        currentState, height, path = key
+
+        # Change path back to list in order to append
+        path = list(path)
+        path.append(currentState)
 
         closeList[currentState] = astar
-        #closeList.append((currentState, astar))
 
         if(currentState[0] == target):
-            #print("Shortest path:", q[1])
-            return q[1]  # return height
+            return key[1], path  # return height
 
         successors = makeSuccessors(currentState, cap)
-        height += 1
 
         for state in successors:
-            astar = height + heu(height, state, target)
+            if state not in closeList and state[0] <= target:
+                openList[(state, height + 1, tuple(path))
+                         ] = heu(state, target) + height + 1
 
-            if not inCloseList(state, astar, closeList) and not inOpenList(
-                    state, astar, openList) and state[0] <= target:
-                openList[(state, height)] = height +\
-                    heu(height, state, target)
-    return -1
-
-
-'''
-Function to check whether a state is in closeList
-'''
-
-
-def inCloseList(state, astar, closeList):
-    if state in closeList:
-        if astar >= closeList[state]:
-            return True
-    return False
-
-
-'''
-Function to check whether a state is in closeList
-'''
-
-
-def inOpenList(state, astar, openList):
-    for elem in openList:
-        if (state in elem) and (openList[elem] < astar):
-            return True
-    return False
+    return -1, []
 
 
 '''
@@ -106,7 +83,6 @@ def makeSuccessors(state, cap):
         else:
             for j in range(noOfJugs):
                 jugs = list(state)
-
                 # pour between jugs
                 if (jugs[j] < cap[j]) and (i != j):
                     transfer = min(jugs[i], cap[j] - jugs[j])
@@ -127,15 +103,16 @@ A-star function calculates the A-star score f
 '''
 
 
-def heu(cost, state, target):
-    h = 0
-    d = abs(target - state[0])
-    if(d == 0):
-        return 0
-    for i in state:
-        h += abs(d - i)
-        h /= (d)
-    return h
+def heu(state, target):
+    d = target - state[0]
+
+    temp = []
+
+    jugs = state[1:]
+    for i in jugs:
+        temp.append(abs(i - d))
+
+    return (min(temp) / len(state))
 
 
 '''
@@ -149,8 +126,10 @@ input4: 2,3,5,19,121,852 = 11443 (36)
 
 def main():
     target, cap = readFromFile("input\input5.txt")
-    #prompt = [1, [1, 3]]
-    print("Shortest path is:", waterPitcher(target, cap))
+    cost, path = waterPitcher(target, cap)
+    # prompt = [1, [1, 3]
+    print("Shortest path is:", path, "\nCost:", cost)
+    print(len(path) - 1)
     # test()
 
 
