@@ -36,7 +36,7 @@ def waterPitcher(target, cap):
 
     closeList = {}
 
-    while openList:
+    while (openList):
         # pop the node with the smallest a star values
         # The values in the heapDict are A-star values
         key, astar = openList.popitem()
@@ -49,16 +49,19 @@ def waterPitcher(target, cap):
         path.append(currentState)
 
         closeList[currentState] = astar
+        print(len(closeList))
 
         if(currentState[0] == target):
             return key[1], path  # return height
 
         successors = makeSuccessors(currentState, cap)
+        height += 1
 
         for state in successors:
+            astar = heu(state, target) + height
             if state not in closeList and state[0] <= target:
-                openList[(state, height + 1, tuple(path))
-                         ] = heu(state, target) + height + 1
+                openList[(state, height, tuple(path))
+                         ] = astar
 
     return -1, []
 
@@ -125,7 +128,7 @@ input4: 2,3,5,19,121,852 = 11443 (36)
 
 
 def main():
-    target, cap = readFromFile("input\input5.txt")
+    target, cap = readFromFile("input\input1.txt")
     cost, path = waterPitcher(target, cap)
     # prompt = [1, [1, 3]
     print("Shortest path is:", path, "\nCost:", cost)
